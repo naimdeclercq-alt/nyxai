@@ -1,0 +1,15 @@
+{
+  "name": "DARKGPT",
+  "short_name": "DARKGPT",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#000000",
+  "theme_color": "#ff6600",
+  "icons": [
+    {
+      "src": "/icon.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    }
+  ]
+}

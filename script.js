@@ -1,13 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // Recherche flexible pour trouver tes éléments même si les ID diffèrent
     const promptInput = document.getElementById('prompt') || document.querySelector('textarea');
     const sendBtn = document.getElementById('send-btn') || document.querySelector('button');
     const messagesContainer = document.getElementById('messages') || document.querySelector('.chat-messages');
-
-    // Diagnostic dans la console du navigateur (Appuie sur F12 pour voir)
-    console.log("Champ texte détecté :", promptInput);
-    console.log("Bouton d'envoi détecté :", sendBtn);
-    console.log("Conteneur messages détecté :", messagesContainer);
 
     if (sendBtn && promptInput) {
         sendBtn.addEventListener('click', (e) => {
@@ -21,8 +15,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 sendMessage();
             }
         });
-    } else {
-        console.error("ATTENTION : Le bouton d'envoi ou le champ de texte est introuvable par le script !");
     }
 
     async function sendMessage() {
@@ -32,11 +24,18 @@ document.addEventListener('DOMContentLoaded', () => {
         appendMessage(text, 'user-message');
         promptInput.value = '';
 
+        // Récupère la langue du PC/Navigateur (ex: "fr-FR" ou "en-US")
+        const userLanguage = navigator.language || navigator.userLanguage || 'fr-FR';
+
         try {
             const response = await fetch('/api/chat', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ message: text })
+                // On envoie le message ET la langue détectée du PC
+                body: JSON.stringify({ 
+                    message: text, 
+                    language: userLanguage 
+                })
             });
 
             const data = await response.json();
@@ -56,3 +55,6 @@ document.addEventListener('DOMContentLoaded', () => {
         messagesContainer.scrollTop = messagesContainer.scrollHeight;
     }
 });
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('/sw.js');
+}
