@@ -17,9 +17,8 @@ app.post('/api/chat', (req, res) => {
     const { message, language } = req.body;
     const userLanguage = language || 'fr'; // Récupère la langue du PC (ex: 'fr', 'en')
 
-    // On intègre la consigne de langue directement dans la recherche/requête envoyée à l'API
-    const localizedQuery = `[Réponds obligatoirement en langue : ${userLanguage}] ${message}`;
-
+   // Force l'IA à répondre dans la langue exacte détectée sur le PC de l'utilisateur (ex: 'fr', 'en', 'es', etc.)
+    const localizedQuery = `Réponds impérativement dans la langue suivante : ${userLanguage}. Question : ${message}`;
     const apikey = process.env.TAVILY_API_KEY || process.env.NEBIUS_API_KEY || "";
 
     const postData = JSON.stringify({
