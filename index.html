@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#ff6600">
   <script 
@@ -17,6 +18,22 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
   <style>
+    /* Pour les écrans de smartphone (moins de 768px de largeur) */
+@media (max-width: 768px) {
+    /* Exemple : Rendre les éléments décoratifs moins envahissants ou les cacher */
+    .element-squelette, .toile-araignee {
+        position: relative !important;
+        width: 100% !important;
+        max-width: 150px;
+        margin: 0 auto;
+        display: block;
+    }
+    
+    /* Ajuster la taille du texte pour éviter qu'il ne chevauche les images */
+    body {
+        font-size: 14px;
+    }
+}
     .gradient-text {
   background: linear-gradient(135deg, var(--accent), #f59e0b, #a855f7);
   background-clip: text;
