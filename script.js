@@ -1,12 +1,17 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const sendBtn = document.getElementById('send-btn');
-    const promptInput = document.getElementById('prompt');
-    const messagesContainer = document.getElementById('messages');
-    const micBtn = document.getElementById('mic-btn');
+    // Recherche flexible pour trouver tes éléments même si les ID diffèrent
+    const promptInput = document.getElementById('prompt') || document.querySelector('textarea');
+    const sendBtn = document.getElementById('send-btn') || document.querySelector('button');
+    const messagesContainer = document.getElementById('messages') || document.querySelector('.chat-messages');
+
+    // Diagnostic dans la console du navigateur (Appuie sur F12 pour voir)
+    console.log("Champ texte détecté :", promptInput);
+    console.log("Bouton d'envoi détecté :", sendBtn);
+    console.log("Conteneur messages détecté :", messagesContainer);
 
     if (sendBtn && promptInput) {
         sendBtn.addEventListener('click', (e) => {
-            e.stopPropagation(); // Empêche de refocus le champ de texte au clic
+            e.stopPropagation();
             sendMessage();
         });
 
@@ -16,6 +21,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 sendMessage();
             }
         });
+    } else {
+        console.error("ATTENTION : Le bouton d'envoi ou le champ de texte est introuvable par le script !");
     }
 
     async function sendMessage() {
@@ -35,7 +42,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const data = await response.json();
             appendMessage(data.reply || "Pas de réponse reçue.", 'ai-message');
         } catch (error) {
-            console.error("Erreur :", error);
+            console.error("Erreur serveur :", error);
             appendMessage("Erreur de communication avec le serveur.", 'ai-message');
         }
     }
@@ -47,29 +54,5 @@ document.addEventListener('DOMContentLoaded', () => {
         msgDiv.textContent = text;
         messagesContainer.appendChild(msgDiv);
         messagesContainer.scrollTop = messagesContainer.scrollHeight;
-    }
-
-    // Gestion de la dictée vocale
-    if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
-        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-        const recognition = new SpeechRecognition();
-        recognition.lang = 'fr-FR';
-        recognition.interimResults = false;
-
-        if (micBtn) {
-            micBtn.addEventListener('click', (e) => {
-                e.stopPropagation();
-                recognition.start();
-            });
-        }
-
-        recognition.onresult = (event) => {
-            const transcript = event.results[0][0].transcript;
-            promptInput.value = transcript;
-        };
-
-        recognition.onerror = (event) => {
-            console.error("Erreur de reconnaissance vocale :", event.error);
-        };
     }
 });
