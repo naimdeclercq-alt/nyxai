@@ -2,24 +2,22 @@ let deferredPrompt;
 const installBtn = document.getElementById('install-btn');
 
 window.addEventListener('beforeinstallprompt', (e) => {
-    // Empêche le navigateur d'afficher sa propre bannière automatique
     e.preventDefault();
-    // Stocke l'événement pour l'utiliser au clic
     deferredPrompt = e;
+    console.log("Événement beforeinstallprompt capturé avec succès !");
 });
 
 if (installBtn) {
     installBtn.addEventListener('click', async () => {
         if (!deferredPrompt) {
-            alert("L'installation n'est pas encore disponible ou l'application est déjà installée.");
+            // Solution de contournement si l'événement natif n'est pas prêt
+            alert("L'installation automatique n'est pas encore déclenchée par le navigateur. Sur mobile, utilise le menu de ton navigateur (les 3 points) et sélectionne 'Ajouter à l'écran d'accueil'.");
             return;
         }
-        // Affiche la fenêtre native d'installation du navigateur
         deferredPrompt.prompt();
-        // Attend le choix de l'utilisateur
         const { outcome } = await deferredPrompt.userChoice;
         if (outcome === 'accepted') {
-            console.log('Utilisateur a accepté l\'installation');
+            console.log('Application installée');
         }
         deferredPrompt = null;
     });
