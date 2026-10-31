@@ -14,11 +14,16 @@ app.use(express.json());
 app.use(express.static(__dirname));
 
 app.post('/api/chat', (req, res) => {
-    const { message } = req.body;
-    const apiKey = process.env.TAVILY_API_KEY || process.env.NEBIUS_API_KEY || "";
+    const { message, language } = req.body;
+    const userLanguage = language || 'fr'; // Récupère la langue du PC (ex: 'fr', 'en')
+
+    // On intègre la consigne de langue directement dans la recherche/requête envoyée à l'API
+    const localizedQuery = `[Réponds obligatoirement en langue : ${userLanguage}] ${message}`;
+
+    const apikey = process.env.TAVILY_API_KEY || process.env.NEBIUS_API_KEY || "";
 
     const postData = JSON.stringify({
-        query: message,
+        query: localizedQuery,
         search_depth: "advanced",
         include_answer: true,
         topic: "general"
@@ -31,7 +36,7 @@ app.post('/api/chat', (req, res) => {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${apiKey}`,
+            'Authorization': `Bearer ${apikey}`,
             'Content-Length': Buffer.byteLength(postData)
         },
         rejectUnauthorized: false
@@ -43,16 +48,16 @@ app.post('/api/chat', (req, res) => {
         apiRes.on('end', () => {
             try {
                 const data = JSON.parse(responseData);
-                const reply = data.answer || (data.results && data.results[0] && data.results[0].content) || data.message || "Aucun résultat trouvé.";
+                const reply = data.answer || (data.results && data.results[0] && data.results[0].content) || "Pas de réponse trouvée.";
                 res.json({ reply });
             } catch (e) {
-                res.status(500).json({ reply: "Erreur de format de réponse de l'API" });
+                res.status(500).json({ reply: "Erreur de format de réponse de l'IA." });
             }
         });
     });
 
     apiReq.on('error', (error) => {
-        res.status(500).json({ reply: "Erreur lors de la communication avec l'API" });
+        res.status(500).json({ reply: "Erreur de communication avec l'API." });
     });
 
     apiReq.write(postData);
