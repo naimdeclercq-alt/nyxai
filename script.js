@@ -58,3 +58,29 @@ document.addEventListener('DOMContentLoaded', () => {
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('/sw.js');
 }
+let deferredPrompt;
+const installBtn = document.getElementById('install-btn');
+
+window.addEventListener('beforeinstallprompt', (e) => {
+    // Empêche Chrome d'afficher sa bannière automatique
+    e.preventDefault();
+    // Stocke l'événement pour l'utiliser plus tard
+    deferredPrompt = e;
+    // Affiche ton bouton personnalisé
+    if (installBtn) {
+        installBtn.style.display = 'block';
+
+        installBtn.addEventListener('click', async () => {
+            // Cache le bouton
+            installBtn.style.display = 'none';
+            // Affiche la invite d'installation native
+            deferredPrompt.prompt();
+            // Attend de voir si l'utilisateur a accepté ou refusé
+            const { outcome } = await deferredPrompt.userChoice;
+            if (outcome === 'accepted') {
+                console.log('Utilisateur a accepté l\'installation PWA');
+            }
+            deferredPrompt = null;
+        });
+    }
+});
