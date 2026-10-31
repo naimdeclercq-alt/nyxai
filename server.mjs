@@ -14,65 +14,64 @@ app.use(express.json());
 app.use(express.static(__dirname));
 
 app.post('/api/chat', (req, res) => {
-  const { message } = req.body;
-  
-  const apiKey = process.env.TAVILY_API_KEY || process.env.NEBIUS_API_KEY || '';
+    const { message } = req.body;
 
-  const postData = JSON.stringify({
-    query: message,
-    search_depth: "advanced",
-    include_answer: true,
-    topic: "general"
-  });
+    const apiKey = process.env.TAVILY_API_KEY || process.env.NEBIUS_API_KEY || "";
 
-  const options = {
-    hostname: 'api.tavily.com',
-    port: 443,
-    path: '/search',
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${apiKey}`,
-      'Content-Length': Buffer.byteLength(postData)
-    },
-    rejectUnauthorized: false
-  };
-
-  const apiReq = https.request(options, (apiRes) => {
-    let responseData = '';
-
-    apiRes.on('data', (chunk) => {
-      responseData += chunk;
+    const postData = JSON.stringify({
+        query: message,
+        search_depth: "advanced",
+        include_answer: true,
+        topic: "general"
     });
 
-    apiRes.on('end', () => {
-      try {
-        const data = JSON.parse(responseData);
-        console.log("Réponse Tavily :", JSON.stringify(data, null, 2));
+    const options = {
+        hostname: 'api.tavily.com',
+        port: 443,
+        path: '/search',
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${apiKey}`,
+            'Content-Length': Buffer.byteLength(postData)
+        },
+        rejectUnauthorized: false
+    };
 
-        const reply = 
-          data.answer || 
-          data.results?.[0]?.content || 
-          data.message || 
-          "Aucun résultat trouvé.";
+    const apiReq = https.request(options, (apiRes) => {
+        let responseData = '';
 
-        res.json({ reply });
-      } catch (e) {
-        console.error("Erreur parsing JSON:", responseData);
-        res.status(500).json({ error: "Erreur de format de réponse de l'API" });
-      }
+        apiRes.on('data', (chunk) => {
+            responseData += chunk;
+        });
+
+        apiRes.on('end', () => {
+            try {
+                const data = JSON.parse(responseData);
+                
+                const reply = 
+                    data.answer || 
+                    (data.results && data.results[0] && data.results[0].content) || 
+                    data.message || 
+                    "Aucun résultat trouvé.";
+
+                res.json({ reply });
+            } catch (e) {
+                console.error("Erreur parsing JSON:", responseData);
+                res.status(500).json({ reply: "Erreur de format de réponse de l'API" });
+            }
+        });
     });
-  });
 
-  apiReq.on('error', (error) => {
-    console.error("Erreur de requête HTTPS:", error);
-    res.status(500).json({ error: "Erreur lors de la communication avec l'API" });
-  });
+    apiReq.on('error', (error) => {
+        console.error("Erreur de requête HTTPS:", error);
+        res.status(500).json({ reply: "Erreur lors de la communication avec l'API" });
+    });
 
-  apiReq.write(postData);
-  apiReq.end();
+    apiReq.write(postData);
+    apiReq.end();
 });
 
 app.listen(PORT, () => {
-  console.log(`Serveur démarré sur le port ${PORT}`);
+    console.log(`Serveur démarré sur le port ${PORT}`);
 });
