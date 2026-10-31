@@ -1,623 +1,237 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <script 
-  src="https://www.paypal.com/sdk/js?client-id=BAAjV8T6fHurugaOVK2jIHO9uh4dulXWIcSqDimjdguGj2JggN7kQO3f0sPjJ4orxAYQAuinUUA9Wh8DS0&components=hosted-buttons&disable-funding=venmo&currency=EUR">
-</script>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#0d0d11">
-  <title>Nyx - Vos réseaux, ton espace de discussion avec l'intelligence artificielle</title>
-  <meta name="description" content="Découvre Nyx, ton espace de discussion avec l'intelligence artificielle.">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DARKGPT - Halloween Edition</title>
+    <style>
+        :root {
+            --bg-color: #0b090a;
+            --text-color: #f1f1f1;
+            --accent: #ff7518; /* Orange Halloween */
+            --accent-glow: rgba(255, 117, 24, 0.4);
+            --panel-bg: #161214;
+            --border-color: #2c2227;
+        }
 
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
 
-  <style>
-    .gradient-text {
-  background: linear-gradient(135deg, var(--accent), #f59e0b, #a855f7);
-  background-clip: text;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-    :root {
-      --accent: #f97316; /* Couleur Orange Halloween */
-      --accent-hover: #ea580c;
-      --bg: #0d0d11;
-      --card-bg: #15151c;
-      --border: #22222e;
-      --text: #e4e4e7;
-      --muted: #a1a1aa;
-      --purple: #8b5cf6;
-    }
+        header.header {
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border-color);
+            background-color: var(--panel-bg);
+            box-shadow: 0 4px 12px rgba(255, 117, 24, 0.1);
+        }
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+        .logo-item {
+            font-size: 1.25rem;
+            font-weight: bold;
+            color: var(--accent);
+            letter-spacing: 2px;
+            text-shadow: 0 0 10px var(--accent-glow);
+        }
 
-    body {
-      font-family: 'Inter', Arial, sans-serif;
-      background-color: var(--bg);
-      color: var(--text);
-      min-height: 100vh;
-      line-height: 1.6;
-      position: relative;
-      background-image: 
-        radial-gradient(circle at 0 0, rgba(249, 115, 22, 0.12) 0%, transparent 40%),
-        radial-gradient(circle at 100% 0, rgba(249, 115, 22, 0.12) 0%, transparent 40%);
-      background-repeat: no-repeat;
-    }
+        .chat-section {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem 1rem;
+        }
 
-    /* Décorations Halloween fixes aux 4 coins */
-    .halloween-corner {
-      position: fixed;
-      font-size: 2rem;
-      z-index: 999;
-      pointer-events: none;
-      filter: drop-shadow(0 0 6px rgba(249, 115, 22, 0.6));
-    }
-    .hw-top-left { top: 12px; left: 12px; }
-    .hw-top-right { top: 12px; right: 12px; }
-    .hw-bottom-left { bottom: 12px; left: 12px; }
-    .hw-bottom-right { bottom: 12px; right: 12px; }
+        .chat-window {
+            background-color: var(--panel-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            width: 100%;
+            max-width: 800px;
+            height: 600px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.8), 0 0 15px rgba(255, 117, 24, 0.15);
+        }
 
-    button, input, textarea, select {
-      font: inherit;
-    }
+        .chat-header {
+            padding: 1rem;
+            border-bottom: 1px solid var(--border-color);
+            font-weight: bold;
+            background-color: #120e10;
+            color: var(--accent);
+        }
 
-    button {
-      cursor: pointer;
-    }
+        .chat-messages {
+            flex: 1;
+            padding: 1rem;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
 
-    a {
-      color: inherit;
-      text-decoration: none;
-    }
+        .message {
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            max-width: 75%;
+            word-wrap: break-word;
+            line-height: 1.4;
+        }
 
-    button:focus-visible, a:focus-visible, textarea:focus-visible {
-      outline: 2px solid var(--accent);
-      outline-offset: 2px;
-    }
+        .user-message {
+            background-color: #2a2024;
+            align-self: flex-end;
+            border: 1px solid #4a353c;
+        }
 
-    .header {
-      padding: 0 7%;
-      height: 70px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      border-bottom: 1px solid var(--border);
-      background: #0d0d11;
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      backdrop-filter: blur(10px);
-    }
+        .ai-message {
+            background-color: #1a1417;
+            align-self: flex-start;
+            border: 1px solid var(--border-color);
+        }
 
-    .logo-item {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      font-size: 22px;
-      font-weight: 700;
-      letter-spacing: -1px;
-    }
+        .chat-input-area {
+            padding: 1rem;
+            border-top: 1px solid var(--border-color);
+            background-color: #120e10;
+        }
 
-    .logo-icon {
-      width: 36px;
-      height: 36px;
-      display: grid;
-      place-items: center;
-      border-radius: 10px;
-      background: linear-gradient(135deg, var(--accent), var(--purple));
-      color: white;
-    }
+        .input-box {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: var(--bg-color);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 0.5rem;
+        }
 
-    .nav-links {
-      display: flex;
-      gap: 24px;
-      align-items: center;
-      color: var(--muted);
-      font-size: 14px;
-    }
+        .input-box textarea {
+            flex: 1;
+            background: transparent;
+            color: var(--text-color);
+            border: none;
+            resize: none;
+            padding: 0.5rem;
+            font-size: 1rem;
+            outline: none;
+            max-height: 100px;
+        }
 
-    .nav-links a:hover {
-      color: var(--accent);
-    }
+        button {
+            background-color: var(--panel-bg);
+            color: var(--text-color);
+            border: 1px solid var(--border-color);
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background 0.2s;
+        }
 
-    .btn {
-      border: 1px solid var(--border);
-      color: #fff;
-      padding: 8px 16px;
-      border-radius: 8px;
-      background: transparent;
-      font-size: 14px;
-      transition: 0.2s;
-    }
+        button:hover {
+            background-color: #2a2024;
+        }
 
-    .btn:hover {
-      border-color: var(--accent);
-      transform: translateY(-1px);
-    }
+        #send-btn {
+            background-color: var(--accent);
+            color: #0b090a;
+            font-weight: bold;
+            border: none;
+            box-shadow: 0 0 10px var(--accent-glow);
+        }
 
-    .btn-primary {
-      background: linear-gradient(135deg, var(--accent), var(--purple));
-      border: none;
-      font-weight: 600;
-    }
-
-    .btn-primary:hover {
-      box-shadow: 0 0 12px rgba(249, 115, 22, 0.4);
-    }
-
-    .hero {
-      padding: 80px 20px 60px;
-      text-align: center;
-      max-width: 900px;
-      margin: auto;
-    }
-
-    .pill {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      border: 1px solid var(--accent);
-      background: rgba(249, 115, 22, 0.1);
-      border-radius: 99px;
-      padding: 6px 14px;
-      font-size: 13px;
-      margin-bottom: 20px;
-      color: var(--accent);
-    }
-
-    .gradient-text {
-      background: linear-gradient(135deg, var(--accent), #f59e0b, #a855f7);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-
-    h1 {
-      font-size: clamp(32px, 6vw, 56px);
-      line-height: 1.1;
-      font-weight: 700;
-      margin-bottom: 20px;
-    }
-
-    .hero p {
-      font-size: 18px;
-      color: var(--muted);
-      margin-bottom: 30px;
-    }
-
-    .hero-actions {
-      display: flex;
-      justify-content: center;
-      gap: 12px;
-      margin-top: 30px;
-      flex-wrap: wrap;
-    }
-
-    .section-heading {
-      text-align: center;
-      margin-bottom: 50px;
-    }
-
-    .section-heading h2 {
-      font-size: clamp(24px, 4vw, 36px);
-      letter-spacing: -0.5px;
-      margin-bottom: 8px;
-      color: var(--accent);
-    }
-
-    .features {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 20px;
-      max-width: 1100px;
-      margin: 0 auto 80px;
-      padding: 0 20px;
-    }
-
-    .feature-card {
-      background: var(--card-bg);
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 24px;
-      transition: 0.2s;
-    }
-
-    .feature-card:hover {
-      border-color: var(--accent);
-      transform: translateY(-4px);
-    }
-
-    .feature-icon {
-      font-size: 28px;
-      margin-bottom: 14px;
-    }
-
-    /* Section Chat Interface */
-    .chat-section {
-      max-width: 900px;
-      margin: 0 auto 80px;
-      padding: 0 20px;
-    }
-
-    .chat-window {
-      background: var(--card-bg);
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      overflow: hidden;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-    }
-
-    .chat-header {
-      padding: 16px 20px;
-      border-bottom: 1px solid var(--border);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .select-model {
-      background: #181822;
-      border: 1px solid var(--border);
-      color: #fff;
-      padding: 6px 12px;
-      border-radius: 8px;
-      font-size: 13px;
-    }
-
-    .messages {
-      padding: 40px 20px;
-      min-height: 250px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .welcome {
-      text-align: center;
-    }
-
-    .welcome .big-icon {
-      font-size: 48px;
-      margin-bottom: 12px;
-    }
-
-    .chat-input-area {
-      padding: 16px 20px;
-      border-top: 1px solid var(--border);
-      background: rgba(0,0,0,0.2);
-    }
-
-    .input-box {
-      display: flex;
-      align-items: center;
-      background: #181822;
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 8px 12px;
-      gap: 8px;
-    }
-
-    .input-box:focus-within {
-      border-color: var(--accent);
-    }
-
-    .input-box textarea {
-      flex: 1;
-      background: transparent;
-      border: none;
-      color: #fff;
-      resize: none;
-      outline: none;
-      max-height: 120px;
-      padding: 4px;
-    }
-
-    .input-box textarea::placeholder {
-      color: var(--muted);
-    }
-
-    .mic-btn, .send-btn {
-      background: transparent;
-      border: none;
-      color: #fff;
-      width: 36px;
-      height: 36px;
-      border-radius: 8px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 18px;
-      transition: 0.2s;
-    }
-
-    .mic-btn:hover {
-      background: rgba(255, 255, 255, 0.1);
-      color: var(--accent);
-    }
-
-    .send-btn {
-      background: var(--accent);
-    }
-
-    .send-btn:hover {
-      background: var(--accent-hover);
-    }
-
-    .disclaimer {
-      text-align: center;
-      font-size: 12px;
-      color: var(--muted);
-      margin-top: 10px;
-    }
-
-    /* Abonnements & FAQ */
-    .pricing {
-      max-width: 1100px;
-      margin: 0 auto 80px;
-      padding: 0 20px;
-    }
-
-    .pricing-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 20px;
-    }
-
-    .price-card {
-      background: var(--card-bg);
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 30px 24px;
-      display: flex;
-      flex-direction: column;
-    }
-
-    .price-card:hover {
-      border-color: var(--accent);
-    }
-
-    .faq {
-      max-width: 800px;
-      margin: 0 auto 80px;
-      padding: 0 20px;
-    }
-
-    details {
-      background: var(--card-bg);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 14px 18px;
-      margin-bottom: 12px;
-    }
-
-    summary {
-      font-weight: 600;
-      cursor: pointer;
-    }
-
-    footer {
-      border-top: 1px solid var(--border);
-      padding: 30px 7%;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      color: var(--muted);
-      font-size: 13px;
-    }
-
-    @media (max-width: 768px) {
-      .nav-links { display: none; }
-      .header { padding: 0 4%; }
-    }
-  </style>
+        #send-btn:hover {
+            opacity: 0.9;
+        }
+    </style>
 </head>
 <body>
 
-  <!-- Décorations Halloween -->
-  <div class="halloween-corner hw-top-left">🕸️ 🎃</div>
-  <div class="halloween-corner hw-top-right">💀 🕸️</div>
-  <div class="halloween-corner hw-bottom-left">🕯️</div>
-  <div class="halloween-corner hw-bottom-right">🦇</div>
+    <header class="header">
+        <div class="logo-item">🎃 DARKGPT (Halloween Edition) 🦇</div>
+    </header>
 
-  <!-- Header -->
-  <header class="header">
-    <div class="logo-item">
-      <div class="logo-icon">🎃</div>
-      <span>Nyx</span>
-    </div>
-    <nav class="nav-links">
-      <a href="#features">Fonctionnalités</a>
-      <a href="#chat">Interface Chat</a>
-      <a href="#pricing">Tarifs</a>
-      <a href="#faq">FAQ</a>
-    </nav>
-    <a href="#chat" class="btn btn-primary">Essayer gratuitement ➔</a>
-  </header>
-
-  <main>
-    <!-- Hero section -->
-    <section class="hero">
-      <div class="pill">🎃 Spécial Halloween - Mode IA Actif</div>
-      <h1>Laisse l'intelligence artificielle <span class="gradient-text">réaliser tes projets</span></h1>
-      <p>Crée du code, rédige des textes et génère de nouvelles idées en toute simplicité grâce à Nyx.</p>
-      <div class="hero-actions">
-        <a href="#chat" class="btn btn-primary">Démarrer une conversation</a>
-        <a href="#pricing" class="btn">Voir les accès</a>
-      </div>
-    </section>
-
-    <!-- Features -->
-    <section class="features" id="features">
-      <div class="feature-card">
-        <div class="feature-icon">⚡</div>
-        <h3>Nyx General</h3>
-        <p>Idéal pour créer des concepts et organiser tes idées dans une interface claire.</p>
-      </div>
-      <div class="feature-card">
-        <div class="feature-icon">💻</div>
-        <h3>Nyx Code</h3>
-        <p>Corrige tes erreurs, résous tes bugs et développe tes projets plus rapidement.</p>
-      </div>
-      <div class="feature-card">
-        <div class="feature-icon">🎨</div>
-        <h3>Nyx Creative</h3>
-        <p>Génère des histoires, du contenu web et des concepts visuels uniques.</p>
-      </div>
-    </section>
-
-    <!-- Section Chat avec Micro Vocal -->
-    <section class="chat-section" id="chat">
-      <div class="section-heading">
-        <h2>Interface de Chat</h2>
-        <p>Pose tes questions ou dicte directement ton texte.</p>
-      </div>
-
-      <div class="chat-window">
-        <div class="chat-header">
-          <small id="chat-status">Mode connecté - 🦇 IA active</small>
-          <select id="modelSelect" class="select-model" aria-label="Choisir un modèle">
-            <option>Nyx General</option>
-            <option>Nyx Code</option>
-            <option>Nyx Creative</option>
-          </select>
-        </div>
-
-        <div class="messages" id="messages">
-          <div class="welcome" id="welcome">
-            <div class="big-icon">🎃</div>
-            <h3>Qu'est-ce qu'on crée aujourd'hui ?</h3>
-            <p>Écris ou parle à voix haute pour discuter avec l'intelligence artificielle.</p>
-          </div>
-        </div>
-
-        <div class="chat-input-area">
-          <div class="input-box">
-            <!-- Zone de texte -->
-            <textarea id="prompt" rows="1" maxlength="4000" placeholder="Écris ton message ou clique sur le micro..."></textarea>
+    <section class="chat-section">
+        <div class="chat-window">
+            <div class="chat-header">Interface de Chat Spooky</div>
             
-            <!-- Bouton Micro Vocal -->
-            <button id="mic-btn" class="mic-btn" type="button" title="Activer la dictée vocale">🎤</button>
-            
-            <!-- Bouton d'envoi -->
-            <button id="sendBtn" class="send-btn" aria-label="Envoyer le message">⬆</button>
-          </div>
-          <p class="disclaimer">Mode sécurisé : vos requêtes sont traitées par l'API Nebius.</p>
+            <!-- Conteneur des messages avec id="messages" -->
+            <div class="chat-messages" id="messages">
+                <div class="message ai-message">🎃 Bouh ! Prêt à explorer les ténèbres avec DARKGPT ?</div>
+            </div>
+
+            <div class="chat-input-area">
+                <div class="input-box">
+                    <!-- Champ de texte avec id="prompt" -->
+                    <textarea id="prompt" rows="1" placeholder="Écris ton message maléfique..."></textarea>
+                    <button id="mic-btn" title="Dictée vocale">🎤</button>
+                    <!-- Bouton d'envoi avec id="send-btn" -->
+                    <button id="send-btn">Envoyer</button>
+                </div>
+            </div>
         </div>
-      </div>
     </section>
 
-    <!-- Tarifs -->
-    <section class="pricing" id="pricing">
-      <div class="section-heading">
-        <h2>Choisis ta formule</h2>
-        <p>Des tarifs simples et transparents.</p>
-      </div>
-      <div class="pricing-grid">
-        <div class="price-card">
-          <h3>Gratuit</h3>
-          <p>Pour découvrir l'expérience Nyx.</p>
-          <a href="#chat" class="btn" style="margin-top:20px; text-align:center;">Commencer</a>
-        </div>
-        <div class="price-card" style="border-color: var(--accent);">
-          <h3>Pro</h3>
-          <p>Pour les utilisateurs réguliers.</p>
-          <a href="#chat" class="btn btn-primary" style="margin-top:20px; text-align:center;">Passer à Pro</a>
-        </div>
-      </div>
-      <div id="paypal-container-QFLZM57WVS7AG"></div>
-<script>
-  paypal.HostedButtons({
-    hostedButtonId: "QFLZM57WVS7AG",
-  }).render("#paypal-container-QFLZM57WVS7AG")
-</script>
-    </section>
+    <!-- Script JavaScript réparé et connecté à /api/chat -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const sendBtn = document.getElementById('send-btn');
+            const promptInput = document.getElementById('prompt');
+            const messagesContainer = document.getElementById('messages');
 
-    <!-- FAQ -->
-    <section class="faq" id="faq">
-      <div class="section-heading">
-        <h2>Questions fréquentes</h2>
-      </div>
-      <details>
-        <summary>Comment fonctionne la reconnaissance vocale ?</summary>
-        <p style="margin-top:10px; color:var(--muted);">Clique sur l'icône micro 🎤, autorise l'accès à ton microphone et parle. Ton texte apparaîtra automatiquement dans la zone d'écriture.</p>
-      </details>
-      <details>
-        <summary>Est-ce sécurisé ?</summary>
-        <p style="margin-top:10px; color:var(--muted);">Vos requêtes sont traitées en toute sécurité via notre API.</p>
-      </details>
-    </section>
-  </main>
+            if (sendBtn && promptInput) {
+                sendBtn.addEventListener('click', sendMessage);
+                promptInput.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter' && !e.shiftKey) {
+                        e.preventDefault();
+                        sendMessage();
+                    }
+                });
+            }
 
-  <!-- Footer -->
-  <footer>
-    <div class="logo-item">
-      <div class="logo-icon">🎃</div>
-      <span>Nyx</span>
-    </div>
-    <p>© 2026 Nyx AI. Tous droits réservés.</p>
-  </footer>
+            async function sendMessage() {
+                const text = promptInput.value.trim();
+                if (!text) return;
 
-  <!-- Script unique pour la reconnaissance vocale -->
-  <script>
-    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+                appendMessage(text, 'user-message');
+                promptInput.value = '';
 
-    if (SpeechRecognition) {
-      const recognition = new SpeechRecognition();
-      recognition.lang = 'fr-FR';
-      recognition.interimResults = true;
-      recognition.continuous = false;
+                try {
+                    const response = await fetch('/api/chat', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ message: text })
+                    });
 
-      const micBtn = document.getElementById('mic-btn');
-      const inputField = document.getElementById('prompt');
+                    const data = await response.json();
+                    appendMessage(data.reply || "Pas de réponse reçue.", 'ai-message');
+                } catch (error) {
+                    console.error("Erreur :", error);
+                    appendMessage("Erreur de communication avec le serveur.", 'ai-message');
+                }
+            }
 
-      let isListening = false;
-
-      micBtn.addEventListener('click', () => {
-        if (!isListening) {
-          recognition.start();
-        } else {
-          recognition.stop();
-        }
-      });
-
-      recognition.onstart = () => {
-        isListening = true;
-        micBtn.style.backgroundColor = '#ef4444'; // Devient rouge lors de la parole
-        micBtn.style.color = '#ffffff';
-      };
-
-      recognition.onresult = (event) => {
-        let transcript = '';
-        for (let i = event.resultIndex; i < event.results.length; i++) {
-          transcript += event.results[i][0].transcript;
-        }
-        if (inputField) {
-          inputField.value = transcript;
-        }
-      };
-
-      recognition.onend = () => {
-        isListening = false;
-        micBtn.style.backgroundColor = 'transparent';
-        micBtn.style.color = '#ffffff';
-      };
-
-      recognition.onerror = (event) => {
-        console.error("Erreur de reconnaissance vocale :", event.error);
-        isListening = false;
-        micBtn.style.backgroundColor = 'transparent';
-        micBtn.style.color = '#ffffff';
-      };
-    } else {
-      console.warn("La reconnaissance vocale n'est pas prise en charge sur ce navigateur.");
-    }
-  </script>
+            function appendMessage(text, className) {
+                if (!messagesContainer) return;
+                const msgDiv = document.createElement('div');
+                msgDiv.className = `message ${className}`;
+                msgDiv.textContent = text;
+                messagesContainer.appendChild(msgDiv);
+                messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            }
+        });
+    </script>
 </body>
 </html>
