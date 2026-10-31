@@ -566,58 +566,79 @@
 
   <!-- Script unique pour la reconnaissance vocale -->
   <script>
-    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        document.addEventListener('DOMContentLoaded', () => {
+            const sendBtn = document.getElementById('send-btn');
+            const promptInput = document.getElementById('prompt');
+            const messagesContainer = document.getElementById('messages');
+            const micBtn = document.getElementById('mic-btn');
 
-    if (SpeechRecognition) {
-      const recognition = new SpeechRecognition();
-      recognition.lang = 'fr-FR';
-      recognition.interimResults = true;
-      recognition.continuous = false;
+            // 1. Gestion de l'envoi de message (Bouton + Touche Entrée)
+            if (sendBtn && promptInput) {
+                sendBtn.addEventListener('click', sendMessage);
+                promptInput.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter' && !e.shiftKey) {
+                        e.preventDefault();
+                        sendMessage();
+                    }
+                });
+            }
 
-      const micBtn = document.getElementById('mic-btn');
-      const inputField = document.getElementById('prompt');
+            async function sendMessage() {
+                const text = promptInput.value.trim();
+                if (!text) return;
 
-      let isListening = false;
+                // Afficher le message de l'utilisateur
+                appendMessage(text, 'user-message');
+                promptInput.value = '';
 
-      micBtn.addEventListener('click', () => {
-        if (!isListening) {
-          recognition.start();
-        } else {
-          recognition.stop();
-        }
-      });
+                try {
+                    // Envoyer la requête POST au serveur backend (/api/chat)
+                    const response = await fetch('/api/chat', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ message: text })
+                    });
 
-      recognition.onstart = () => {
-        isListening = true;
-        micBtn.style.backgroundColor = '#ef4444'; // Devient rouge lors de la parole
-        micBtn.style.color = '#ffffff';
-      };
+                    const data = await response.json();
+                    appendMessage(data.reply || "Pas de réponse reçue.", 'ai-message');
+                } catch (error) {
+                    console.error("Erreur :", error);
+                    appendMessage("Erreur de communication avec le serveur.", 'ai-message');
+                }
+            }
 
-      recognition.onresult = (event) => {
-        let transcript = '';
-        for (let i = event.resultIndex; i < event.results.length; i++) {
-          transcript += event.results[i][0].transcript;
-        }
-        if (inputField) {
-          inputField.value = transcript;
-        }
-      };
+            function appendMessage(text, className) {
+                if (!messagesContainer) return;
+                const msgDiv = document.createElement('div');
+                msgDiv.className = `message ${className}`;
+                msgDiv.textContent = text;
+                messagesContainer.appendChild(msgDiv);
+                messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            }
 
-      recognition.onend = () => {
-        isListening = false;
-        micBtn.style.backgroundColor = 'transparent';
-        micBtn.style.color = '#ffffff';
-      };
+            // 2. Gestion de la dictée vocale (Corrigé avec promptInput)
+            if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+                const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+                const recognition = new SpeechRecognition();
+                recognition.lang = 'fr-FR';
+                recognition.interimResults = false;
 
-      recognition.onerror = (event) => {
-        console.error("Erreur de reconnaissance vocale :", event.error);
-        isListening = false;
-        micBtn.style.backgroundColor = 'transparent';
-        micBtn.style.color = '#ffffff';
-      };
-    } else {
-      console.warn("La reconnaissance vocale n'est pas prise en charge sur ce navigateur.");
-    }
-  </script>
+                if (micBtn) {
+                    micBtn.addEventListener('click', () => {
+                        recognition.start();
+                    });
+                }
+
+                recognition.onresult = (event) => {
+                    const transcript = event.results[0][0].transcript;
+                    promptInput.value = transcript; // Corrigé ici (utilise promptInput)
+                };
+
+                recognition.onerror = (event) => {
+                    console.error("Erreur de reconnaissance vocale :", event.error);
+                };
+            }
+        });
+    </script>
 </body>
 </html>
