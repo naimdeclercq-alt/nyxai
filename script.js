@@ -1,14 +1,15 @@
-// --- Gestionnaire d'envoi de message vers l'API ---
 document.addEventListener('DOMContentLoaded', () => {
     const sendBtn = document.getElementById('send-btn');
     const promptInput = document.getElementById('prompt');
     const messagesContainer = document.getElementById('messages');
+    const micBtn = document.getElementById('mic-btn');
 
     if (sendBtn && promptInput) {
-        // Envoi au clic sur le bouton
-        sendBtn.addEventListener('click', sendMessage);
+        sendBtn.addEventListener('click', (e) => {
+            e.stopPropagation(); // Empêche de refocus le champ de texte au clic
+            sendMessage();
+        });
 
-        // Envoi avec la touche Entrée (sans Shift)
         promptInput.addEventListener('keypress', (e) => {
             if (e.key === 'Enter' && !e.shiftKey) {
                 e.preventDefault();
@@ -21,12 +22,10 @@ document.addEventListener('DOMContentLoaded', () => {
         const text = promptInput.value.trim();
         if (!text) return;
 
-        // 1. Afficher le message de l'utilisateur
         appendMessage(text, 'user-message');
         promptInput.value = '';
 
         try {
-            // 2. Envoyer la requête au backend Node.js
             const response = await fetch('/api/chat', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -34,8 +33,6 @@ document.addEventListener('DOMContentLoaded', () => {
             });
 
             const data = await response.json();
-            
-            // 3. Afficher la réponse de l'IA
             appendMessage(data.reply || "Pas de réponse reçue.", 'ai-message');
         } catch (error) {
             console.error("Erreur :", error);
@@ -50,5 +47,29 @@ document.addEventListener('DOMContentLoaded', () => {
         msgDiv.textContent = text;
         messagesContainer.appendChild(msgDiv);
         messagesContainer.scrollTop = messagesContainer.scrollHeight;
+    }
+
+    // Gestion de la dictée vocale
+    if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        const recognition = new SpeechRecognition();
+        recognition.lang = 'fr-FR';
+        recognition.interimResults = false;
+
+        if (micBtn) {
+            micBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                recognition.start();
+            });
+        }
+
+        recognition.onresult = (event) => {
+            const transcript = event.results[0][0].transcript;
+            promptInput.value = transcript;
+        };
+
+        recognition.onerror = (event) => {
+            console.error("Erreur de reconnaissance vocale :", event.error);
+        };
     }
 });
