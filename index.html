@@ -1,6 +1,9 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
+  <script 
+  src="https://www.paypal.com/sdk/js?client-id=BAAjV8T6fHurugaOVK2jIHO9uh4dulXWIcSqDimjdguGj2JggN7kQO3f0sPjJ4orxAYQAuinUUA9Wh8DS0&components=hosted-buttons&disable-funding=venmo&currency=EUR">
+</script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="theme-color" content="#0d0d11">
@@ -528,6 +531,12 @@
           <a href="#chat" class="btn btn-primary" style="margin-top:20px; text-align:center;">Passer à Pro</a>
         </div>
       </div>
+      <div id="paypal-container-QFLZM57WVS7AG"></div>
+<script>
+  paypal.HostedButtons({
+    hostedButtonId: "QFLZM57WVS7AG",
+  }).render("#paypal-container-QFLZM57WVS7AG")
+</script>
     </section>
 
     <!-- FAQ -->
