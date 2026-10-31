@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head> 
+<script src="https://www.paypal.com/sdk/js?client-id=BAAjV8T6fHurugaOVK2jIHO9uh4dulXWIcSqDimjdguGj2JggN7kQO3f0sPjJ4orxAYQAuinUUA9Wh8DS0&components=hosted-buttons&disable-funding=venmo&currency=EUR">
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#09090d">
+<title>NyxAI — Ton intelligence, sans limites</title>
+<meta name="description" content="Découvre NyxAI, ton espace de discussion avec l'intelligence artificielle.">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+:root {
+  --bg: #09090d;
+  --panel: #101016;
+  --card: #14141c;
+  --border: #262631;
+  --text: #f5f5fa;
+  --muted: #9696a8;
+  --purple: #a855f7;
+  --blue: #6366f1;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body 
+
+{
+  font-family: Inter, Arial, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  line-height: 1.6;
+}
+
+button, input, textarea { font: inherit; }
+button { cursor: pointer; }
+
+a { color: inherit; text-decoration: none; }
+
+button:focus-visible, a:focus-visible, textarea:focus-visible {
+  outline: 2px solid var(--purple);
+  outline-offset: 3px;
+}
+
+.navbar {
+  height: 76px;
+  padding: 0 7%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid #ffffff0d;
+  background: #09090deF;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  backdrop-filter: blur(20px);
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: -1px;
+}
+
+.logo-icon {
+  width: 38px;
+  height: 38px;
+  display: grid;
+  place-items: center;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #a855f7, #6366f1);
+  box-shadow: 0 0 28px #8b5cf633;
+  font-size: 21px;
+}
+
+.logo span { color: #bd82ff; }
+
+.nav-links {
+  display: flex;
+  gap: 30px;
+  align-items: center;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.nav-links a:hover { color: white; }
+
+.btn {
+  border: 1px solid var(--border);
+  color: white;
+  padding: 10px 17px;
+  border-radius: 10px;
+  background: #17171f;
+  transition: .2s;
+}
+
+.btn:hover { border-color: #9b5cf6; transform: translateY(-1px); }
+
+.btn-primary {
+  background: linear-gradient(120deg, #9333ea, #6366f1);
+  border: none;
+  font-weight: 700;
+}
+
+.btn-primary:hover { box-shadow: 0 0 25px #9333ea55; }
+
+.hero {
+  text-align: center;
+  padding: 105px 20px 75px;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero::before {
+  content: "";
+  position: absolute;
+  width: 550px;
+  height: 350px;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #7028d522;
+  filter: blur(100px);
+  pointer-events: none;
+}
+
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid #a855f744;
+  background: #a855f711;
+  color: #d4a9ff;
+  padding: 7px 13px;
+  border-radius: 30px;
+  font-size: 12px;
+  position: relative;
+}
+
+.dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #a855f7;
+  box-shadow: 0 0 10px #a855f7;
+}
+
+h1 {
+  font-size: clamp(40px, 7vw, 76px);
+  line-height: 1.08;
+  letter-spacing: -4px;
+  margin: 29px 0 22px;
+  position: relative;
+}
+
+.gradient-text {
+  background: linear-gradient(90deg, #c084fc, #818cf8, #67e8f9);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.hero p {
+  max-width: 620px;
+  margin: auto;
+  color: var(--muted);
+  font-size: 16px;
+}
+
+.hero-actions {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 30px;
+  flex-wrap: wrap;
+}
+
+.hero-actions button { padding: 14px 23px; }
+
+.hero-note { font-size: 11px !important; margin-top: 17px !important; }
+
+.section {
+  padding: 75px 7%;
+  max-width: 1450px;
+  margin: auto;
+}
+
+.section-heading { text-align: center; margin-bottom: 38px; }
+
+.section-heading h2 {
+  font-size: clamp(28px, 4vw, 40px);
+  letter-spacing: -1.5px;
+  margin-bottom: 9px;
+}
+
+.section-heading p { color: var(--muted); font-size: 14px; }
+
+.features {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.feature-card, .model-card, .price-card {
+  background: linear-gradient(145deg, #15151e, #101016);
+  border: 1px solid var(--border);
+  border-radius: 17px;
+  padding: 25px;
+  transition: .25s;
+}
+
+.feature-card:hover, .model-card:hover {
+  border-color: #8651bd;
+  transform: translateY(-4px);
+}
+
+.feature-icon {
+  width: 46px;
+  height: 46px;
+  border-radius: 13px;
+  display: grid;
+  place-items: center;
+  background: #a855f71b;
+  font-size: 22px;
+  margin-bottom: 20px;
+}
+
+.feature-card h3, .model-card h3 { font-size: 16px; margin-bottom: 8px; }
+.feature-card p, .model-card p { font-size: 13px; color: var(--muted); }
+
+.models {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.model-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 17px;
+}
+
+.model-symbol { font-size: 28px; }
+.tag {
+  border-radius: 7px;
+  padding: 4px 8px;
+  font-size: 10px;
+  background: #a855f71b;
+  color: #cda1ff;
+}
+
+.model-card button { width: 100%; margin-top: 20px; }
+
+.chat-section {
+  max-width: 1000px;
+  margin: auto;
+  padding: 60px 20px 90px;
+  scroll-margin-top: 85px;
+}
+
+.chat-window {
+  background: #0e0e14;
+  border: 1px solid #2c2c39;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 25px 100px #0007;
+}
+
+.chat-header {
+  padding: 17px 20px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+
+.chat-header small { color: var(--muted); font-size: 11px; }
+
+.select-model {
+  background: #181821;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 8px 10px;
+  color: white;
+  max-width: 55%;
+}
+
+.messages {
+  height: 380px;
+  overflow-y: auto;
+  padding: 25px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.welcome { text-align: center; margin: auto; max-width: 430px; }
+.welcome .big-icon { font-size: 40px; margin-bottom: 12px; }
+.welcome h3 { font-size: 20px; margin-bottom: 8px; }
+.welcome p { font-size: 13px; color: var(--muted); }
+
+.message { display: flex; gap: 12px; align-items: flex-start; }
+.avatar {
+  width: 32px;
+  height: 32px;
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  border-radius: 10px;
+  background: #a855f722;
+}
+.message.user { flex-direction: row-reverse; }
+.message.user .avatar { background: #3730a3; }
+.message-body { max-width: 85%; font-size: 13px; white-space: pre-wrap; overflow-wrap: anywhere; }
+.message-body strong { display: block; margin-bottom: 5px; font-size: 12px; }
+.message.user .message-body { background: #20202b; padding: 11px 14px; border-radius: 13px; }
+
+.chat-input-area { padding: 15px 20px 20px; border-top: 1px solid var(--border); }
+.input-box {
+  display: flex;
+  gap: 10px;
+  align-items: flex-end;
+  background: #17171f;
+  border: 1px solid #343443;
+  padding: 10px;
+  border-radius: 14px;
+}
+.input-box:focus-within { border-color: #9251d5; }
+.input-box textarea {
+  flex: 1;
+  min-width: 0;
+  resize: none;
+  max-height: 130px;
+  color: white;
+  background: transparent;
+  border: none;
+  outline: none;
+  padding: 8px;
+  font-size: 13px;
+}
+.input-box textarea::placeholder { color: #777787; }
+.send-btn {
+  width: 40px;
+  height: 40px;
+  border: none;
+  border-radius: 10px;
+  color: white;
+  background: linear-gradient(135deg, #a855f7, #6366f1);
+  flex-shrink: 0;
+}
+.send-btn:disabled { opacity: .5; cursor: wait; }
+.disclaimer { color: #777787; text-align: center; font-size: 10px; margin-top: 10px; }
+
+.pricing {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+}
+.price-card { padding: 28px; }
+.price-card.popular { border-color: #a855f7; box-shadow: 0 0 30px #9333ea13; }
+.price { font-size: 37px; font-weight: 800; margin: 17px 0; letter-spacing: -2px; }
+.price small { font-size: 12px; color: var(--muted); font-weight: 400; letter-spacing: 0; }
+.price-card p { color: var(--muted); font-size: 12px; }
+.price-card ul { list-style: none; margin: 23px 0; font-size: 12px; }
+.price-card li { margin: 12px 0; color: #d3d3de; }
+.price-card li::before { content: "✓"; color: #c084fc; margin-right: 10px; }
+.price-card button { width: 100%; }
+
+.faq { max-width: 760px; margin: auto; }
+details { padding: 20px 0; border-bottom: 1px solid var(--border); }
+summary { cursor: pointer; font-size: 14px; font-weight: 600; }
+details p { margin-top: 12px; color: var(--muted); font-size: 13px; }
+
+footer {
+  border-top: 1px solid var(--border);
+  padding: 35px 7%;
+  color: var(--muted);
+  font-size: 12px;
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.toast {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translate(-50%, 120px);
+  background: #252532;
+  border: 1px solid #444456;
+  padding: 12px 18px;
+  border-radius: 12px;
+  font-size: 12px;
+  z-index: 30;
+  transition: transform .3s;
+}
+.toast.show { transform: translate(-50%, 0); }
+
+@media(max-width: 800px) {
+  .features, .models, .pricing { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .nav-links { gap: 13px; }
+  .nav-links a:not(.btn) { display: none; }
+  h1 { letter-spacing: -2px; }
+}
+@media(max-width: 520px) {
+  .navbar { padding: 0 18px; height: 66px; }
+  .logo { font-size: 19px; }
+  .logo-icon { width: 34px; height: 34px; }
+  .section { padding: 55px 18px; }
+  .hero { padding: 80px 18px 50px; }
+  .hero p { font-size: 14px; }
+  .features, .models, .pricing { grid-template-columns: 1fr; }
+  .chat-section { padding: 35px 12px 60px; }
+  .messages { height: 350px; padding: 17px; }
+  .chat-header { padding: 13px; }
+  footer { padding: 28px 18px; }
+}
+</style>
+<!-- Bouton Micro et reconnaissance vocale tout-en-un -->
+<div style="display: flex; align-items: center; gap: 10px; margin: 10px 0;">
+  <button id="mic-btn" type="button" title="Parler" style="background-color: #101016; color: #f5f5fa; border: 1px solid #262631; padding: 10px 14px; border-radius: 8px; cursor: pointer; font-size: 1.1rem; transition: all 0.2s ease;">
+    🎤
+  </button>
+</div>
+
+<script>
+  // Script intégré pour faire fonctionner la dictée vocale
+  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+
+  if (SpeechRecognition) {
+    const recognition = new SpeechRecognition();
+    recognition.lang = 'fr-FR';
+    recognition.continuous = false;
+    recognition.interimResults = true;
+
+    const micBtn = document.getElementById('mic-btn');
+    const inputField = document.getElementById('prompt-input') || document.querySelector('textarea') || document.querySelector('input[type="text"]');
+
+    let isListening = false;
+
+    micBtn.addEventListener('click', () => {
+      if (!isListening) {
+        recognition.start();
+      } else {
+        recognition.stop();
+      }
+    });
+
+    recognition.onstart = () => {
+      isListening = true;
+      micBtn.style.backgroundColor = '#ef4444';
+      micBtn.style.color = 'white';
+    };
+
+    recognition.onresult = (event) => {
+      let transcript = '';
+      for (let i = event.resultIndex; i < event.results.length; i++) {
+        transcript += event.results[i][0].transcript;
+      }
+      if (inputField) {
+        inputField.value = transcript;
+      }
+    };
+
+    recognition.onend = () => {
+      isListening = false;
+      micBtn.style.backgroundColor = '#101016';
+      micBtn.style.color = '#f5f5fa';
+    };
+
+    recognition.onerror = (event) => {
+      console.error("Erreur micro :", event.error);
+      isListening = false;
+      micBtn.style.backgroundColor = '#101016';
+      micBtn.style.color = '#f5f5fa';
+    };
+  } else {
+    console.warn("La reconnaissance vocale n'est pas supportée sur ce navigateur.");
+  }
+</script>
+</head>
+
+<body>
+
+<header class="navbar">
+  <a href="#" class="logo">
+    <div class="logo-icon">✦</div>
+    Nyx<span>AI</span>
+  </a>
+  <nav class="nav-links">
+    <a href="#features">Fonctionnalités</a>
+    <a href="#models">Modèles</a>
+    <a href="#pricing">Tarifs</a>
+    <a href="#chat" class="btn btn-primary">Essayer gratuitement ↗</a>
+  </nav>
+</header>
+
+<main>
+  <section class="hero">
+    <div class="pill"><span class="dot"></span> TON ESPACE IA NOUVELLE GÉNÉRATION</div>
+    <h1>L'intelligence à<br><span class="gradient-text">un autre niveau.</span></h1>
+    <p>Un espace pour réfléchir, créer, coder et explorer de nouvelles idées grâce à l'intelligence artificielle.</p>
+    <div class="hero-actions">
+      <button class="btn btn-primary" onclick="goToChat()">Commencer maintenant ↗</button>
+      <a href="#features" class="btn">Découvrir les outils ↓</a>
+    </div>
+    <p class="hero-note">Interface connectée · Clé API Nebius active</p>
+  </section>
+
+  <section class="section" id="features">
+    <div class="section-heading">
+      <h2>Tout ce qu'il te faut.</h2>
+      <p>Des outils conçus pour donner vie à tes idées.</p>
+    </div>
+    <div class="features">
+      <article class="feature-card">
+        <div class="feature-icon">✦</div>
+        <h3>Assistant intelligent</h3>
+        <p>Pose tes questions, explore des concepts et organise tes idées dans une interface simple.</p>
+      </article>
+      <article class="feature-card">
+        <div class="feature-icon">⌘</div>
+        <h3>Code & développement</h3>
+        <p>Prépare des projets, comprends des erreurs et développe tes idées plus rapidement.</p>
+      </article>
+      <article class="feature-card">
+        <div class="feature-icon">◈</div>
+        <h3>Créativité</h3>
+        <p>Imagine des concepts, prépare des textes et construis tes prochains projets.</p>
+      </article>
+      <article class="feature-card">
+        <div class="feature-icon">⚡</div>
+        <h3>Réponses rapides</h3>
+        <p>Une interface minimaliste conçue pour rendre chaque conversation agréable.</p>
+      </article>
+      <article class="feature-card">
+        <div class="feature-icon">◎</div>
+        <h3>Plusieurs modèles</h3>
+        <p>Choisis un profil adapté à la tâche que tu souhaites réaliser.</p>
+      </article>
+      <article class="feature-card">
+        <div class="feature-icon">▤</div>
+        <h3>Projets & idées</h3>
+        <p>Utilise le chat comme point de départ pour préparer tes futurs projets.</p>
+      </article>
+    </div>
+  </section>
+
+  <section class="section" id="models">
+    <div class="section-heading">
+      <h2>Choisis ton mode.</h2>
+      <p>Trois profils pour différentes tâches.</p>
+    </div>
+    <div class="models">
+      <article class="model-card">
+        <div class="model-top"><span class="model-symbol">✦</span><span class="tag">POLYVALENT</span></div>
+        <h3>Nyx General</h3>
+        <p>Pour les questions, les idées, l'apprentissage et les conversations.</p>
+        <button class="btn" onclick="chooseModel('Nyx General')">Utiliser ce mode</button>
+      </article>
+      <article class="model-card">
+        <div class="model-top"><span class="model-symbol">⌘</span><span class="tag">DÉVELOPPEMENT</span></div>
+        <h3>Nyx Code</h3>
+        <p>Un profil orienté vers la programmation, les sites web et le débogage.</p>
+        <button class="btn" onclick="chooseModel('Nyx Code')">Utiliser ce mode</button>
+      </article>
+      <article class="model-card">
+        <div class="model-top"><span class="model-symbol">◈</span><span class="tag">CRÉATIVITÉ</span></div>
+        <h3>Nyx Creative</h3>
+        <p>Pour les textes, les concepts, le marketing et les idées originales.</p>
+        <button class="btn" onclick="chooseModel('Nyx Creative')">Utiliser ce mode</button>
+      </article>
+    </div>
+  </section>
+
+  <section class="chat-section" id="chat">
+    <div class="section-heading">
+      <h2>Essaie le chat.</h2>
+      <p>Teste l'interface et envoie un premier message.</p>
+    </div>
+    <div class="chat-window">
+      <div class="chat-header">
+        <div>
+          <strong>✦ NyxAI</strong><br>
+          <small id="chat-status">Mode connecté — IA active</small>
+        </div>
+        <select id="modelSelect" class="select-model" aria-label="Choisir un modèle">
+          <option>Nyx General</option>
+          <option>Nyx Code</option>
+          <option>Nyx Creative</option>
+        </select>
+      </div>
+
+      <!-- Zone des messages gérée par script.js -->
+      <div class="messages" id="messages" aria-live="polite">
+        <div class="welcome" id="welcome">
+          <div class="big-icon">✦</div>
+          <h3>Qu'est-ce qu'on crée ?</h3>
+          <p>Écris un message ci-dessous pour discuter avec l'intelligence artificielle.</p>
+        </div>
+      </div>
+
+      <div class="chat-input-area">
+        <div class="input-box">
+          <textarea id="prompt" rows="1" maxlength="4000"
+            placeholder="Écris ton message ici..."
+            aria-label="Ton message"></textarea>
+          <button id="sendBtn" class="send-btn" aria-label="Envoyer le message">↑</button>
+        </div>
+        <p class="disclaimer">Mode sécurisé : vos requêtes sont traitées par l'API Nebius.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="pricing">
+    <div class="section-heading">
+      <h2>Des offres pour chaque projet.</h2>
+      <p>Choisis la formule adaptée à tes besoins.</p>
+    </div>
+    <div class="pricing">
+      <article class="price-card">
+        <h3>Starter</h3>
+        <p>Pour découvrir l'expérience.</p>
+        <div class="price">0 € <small>/ mois</small></div>
+        <ul>
+          <li>Interface de chat</li>
+          <li>Profils de base</li>
+          <li>Design responsive</li>
+        </ul>
+        <button class="btn" onclick="goToChat()">Essayer</button>
+      </article>
+      <article class="price-card popular">
+        <span class="tag">POPULAIRE</span>
+        <h3 style="margin-top:14px">Pro</h3>
+        <p>Pour les utilisateurs réguliers.</p>
+        <div class="price">9,99 € <small>/ mois</small></div>
+        <ul>
+          <li>Modèles avancés</li>
+          <li>Outils de productivité</li>
+          <li>Expérience premium</li>
+        </ul>
+        <div id="paypal-container-4RZJ7BJRYXCZL" style="margin-top:15px;"></div>
+        <script>
+          paypal.HostedButtons({
+            hostedButtonId: "4RZJ7BJRYXCZL",
+          }).render("#paypal-container-4RZJ7BJRYXCZL");
+        </script>
+      </article>
+      <article class="price-card">
+        <h3>Ultimate</h3>
+        <p>Pour les projets ambitieux.</p>
+        <div class="price">19,99 € <small>/ mois</small></div>
+        <ul>
+          <li>Accès illimité</li>
+          <li>Fonctionnalités supplémentaires</li>
+          <li>Personnalisation complète</li>
+        </ul>
+        <div id="paypal-container-B5U8S47K3KTAN" style="margin-top:15px;"></div>
+        <script>
+          paypal.HostedButtons({
+            hostedButtonId: "B5U8S47K3KTAN",
+          }).render("#paypal-container-B5U8S47K3KTAN");
+        </script>
+      </article>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-heading">
+      <h2>Questions fréquentes.</h2>
+    </div>
+    <div class="faq">
+      <details>
+        <summary>NyxAI utilise-t-il une véritable intelligence artificielle ?</summary>
+        <p>Oui ! Le chat est connecté via un serveur sécurisé à l'API Nebius pour te fournir de vraies réponses en direct.</p>
+      </details>
+      <details>
+        <summary>Dois-je installer quelque chose ?</summary>
+        <p>Assure-toi simplement que ton serveur Node.js tourne en arrière-plan avec la commande `node server.mjs`.</p>
+      </details>
+      <details>
+        <summary>Les paiements PayPal fonctionnent-ils ?</summary>
+        <p>Oui, les boutons de paiement hébergés officiels sont intégrés dans les cartes de tarification.</p>
+      </details>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <a href="#" class="logo"><div class="logo-icon">✦</div>Nyx<span>AI</span></a>
+  <p>© 2026 NyxAI · Tous droits réservés.</p>
+  <a href="#features">Retour en haut ↑</a>
+</footer>
+
+<div class="toast" id="toast" role="status"></div>
+
+<!-- Lien vers ton script externe unique qui gère la communication avec le backend et l'API -->
+<script src="script.js"></script>
+</body>
+</html>
